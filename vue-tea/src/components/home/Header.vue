@@ -1,7 +1,7 @@
 <template>
   <header>
     <h1><img src="../../assets/image/logo.png" alt="" /></h1>
-    <div class="search">
+    <div class="search" @click="handleSearch">
       <i class="iconfont icon-Magnifier"></i>
       <span class="placeholder">搜你喜欢的</span>
     </div>
@@ -12,7 +12,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    handleSearch() {
+      this.$router.push("/search");
+    },
+  },
+};
 </script>
 
 <style scoped>

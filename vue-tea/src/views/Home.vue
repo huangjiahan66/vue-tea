@@ -2,8 +2,9 @@
   <div class="home">
     <div class="headers">
       <div class="headers-main">
+        <!-- 头部 -->
         <Header></Header>
-
+        <!-- tab -->
         <van-tabs v-model="active" class="ly-tabs" @change="handleTabChange">
           <div v-for="(item, index) in tabs" :key="index">
             <van-tab :title="item.label"></van-tab>
@@ -12,6 +13,7 @@
       </div>
     </div>
 
+    <!-- section -->
     <section ref="wrapper">
       <div>
         <div v-for="(item, index) in newData" :key="index">
@@ -24,8 +26,8 @@
             v-if="item.type == 'recommendList'"
             :recommendList="item.data"
           ></Recommend>
-          <Like v-if="item.type == 'LikeList'" :adList="item.data"></Like>
-          <Ad v-if="item.type == 'adList'" :likeList="item.data"></Ad>
+          <Like v-if="item.type == 'likeList'" :likeList="item.data"></Like>
+          <Ad v-if="item.type == 'adList'" :AdList="item.data"></Ad>
         </div>
       </div>
     </section>
@@ -70,13 +72,12 @@ export default {
   },
   mounted() {},
   methods: {
-    getData() {
-      axios({
+    async getData() {
+      const res = await axios({
         url: "/api/index_list/0/data/1",
-      }).then((res) => {
-        this.tabs = res.data.data.topBar; //tabs数据
-        this.newData = res.data.data.data;
       });
+      this.tabs = res.data.data.topBar; //tabs数据
+      this.newData = res.data.data.data;
 
       this.$nextTick(() => {
         new BetterScroll(this.$refs.wrapper, {
