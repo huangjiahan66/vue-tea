@@ -1,14 +1,12 @@
-*{margin: 0;padding: 0;}
+*{margin:0;padding:0;}
 ul{
-  list-style: none;
+	list-style: none;
 }
-
 input{
-   background: none;
-   outline: none;
-   border: none;
+	background:none;  
+	outline:none;  
+	border:none;
 }
-
-input:focus{
-  border: none;
+input:focus{   
+	border:none;
 }

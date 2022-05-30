@@ -1,43 +1,65 @@
 <template>
-  <div class="swiper">
-    <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-      <van-swipe-item
-        class="swiper-item"
-        v-for="(item, index) in swiperList"
-        :key="index"
-      >
-        <img :src="item.imgUrl" alt="" />
-      </van-swipe-item>
-    </van-swipe>
-  </div>
+	<div class='swiper-main'>
+		<swiper :options="swiperOption">
+		  <swiper-slide 
+			v-for='(item,index) in swiperList' 
+			:key='index'
+		   >
+			<img :src="item.imgUrl" alt="">
+		  </swiper-slide>
+		</swiper>
+		<div class="swiper-pagination"></div> 
+	</div>
 </template>
 
 <script>
+import 'swiper/dist/css/swiper.css'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
-  props: {
-    swiperList: Array,
+  name: 'Swiper',
+  props:{
+	swiperList:Array
   },
-  data() {
-    return {};
+  data(){
+    return{
+		swiperOption: {//swiper3
+			autoplay: 3000,
+			speed: 1000,
+			pagination: {
+				el: '.swiper-pagination'
+			}
+		}
+    }
   },
-};
+  components: {
+    swiper,
+    swiperSlide
+  },
+}
 </script>
 
-<style>
-.swiper {
-  height: 4.4rem;
-  width: 100%;
+<style scoped>
+.swiper-main{
+	position: relative;
+	width: 100%;
+	height: 4.4rem;
 }
-.my-swipe {
-  height: 4.4rem;
-  width: 100%;
+.swiper-container{
+	width: 100%;
+	height: 4.4rem;
 }
-.swiper-item {
-  height: 4.4rem;
-  width: 100%;
+.swiper-main img{
+	width: 100%;
+	height: 4.4rem;
 }
-.swiper-item img {
-  height: 4.4rem;
-  width: 100%;
+.swiper-pagination{
+	width: 100%;
+	bottom:0px;
+}
+::v-deep .swiper-pagination-bullet-active{
+	background-color: #b0352f;
+}
+::v-deep .swiper-pagination-bullet{
+	margin:0 0.08rem;
 }
 </style>

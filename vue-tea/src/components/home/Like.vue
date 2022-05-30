@@ -1,12 +1,17 @@
 <template>
   <div class="like">
-    <Card><span>猜你喜欢</span></Card>
+    <Card>
+      <span>猜你喜欢</span>
+    </Card>
     <ul>
       <li v-for="(item, index) in likeList" :key="index">
-        <h2><img :src="item.imgUrl" alt="" /></h2>
+        <h2>
+          <img v-lazy="item.imgUrl" alt="" />
+        </h2>
         <h3>{{ item.name }}</h3>
         <div>
-          <span>￥</span><b>{{ item.price }}</b>
+          <span>¥</span>
+          <b>{{ item.price }}</b>
         </div>
       </li>
     </ul>
@@ -18,9 +23,6 @@ import Card from "@/components/home/Card.vue";
 export default {
   props: {
     likeList: Array,
-  },
-  data() {
-    return {};
   },
   components: {
     Card,
@@ -67,7 +69,8 @@ export default {
   width: 4.693333rem;
   height: 4.693333rem;
 }
-.like img[lazy="loading"] {
-  background-color: #f7f7f7;
+
+.like image[lazy="loading"] {
+  background: #f7f7f7;
 }
 </style>

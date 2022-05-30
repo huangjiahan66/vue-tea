@@ -1,58 +1,62 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-
 import Home from "../views/Home.vue";
-import My from "../views/My.vue";
-import Cart from "../views/Cart.vue";
-import List from "../views/List.vue";
-import Search from "../views/Search.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/home",
-    name: "home",
+    name: "Home",
     component: Home,
   },
   {
     path: "/",
-    redirect: "/home",
+    redirect:'/home'
   },
   {
     path: "/list",
-    name: "list",
-    component: List,
+    name: "List",
+    component: () =>
+      import("../views/List.vue"),
   },
   {
     path: "/cart",
     name: "Cart",
-    component: Cart,
+    component: () =>
+      import("../views/Cart.vue"),
   },
   {
     path: "/my",
-    name: "my",
-    component: My,
+    name: "My",
+    component: () =>
+      import("../views/My.vue"),
   },
   {
     path: "/search",
-    name: "search",
-    component: Search,
-    children: [
-      {
-        path: "/",
-        name: "index",
-        component: () => import("../views/search/search-index.vue"),
-      },
-      {
-        path: "list",
-        name: "list",
-        component: () => import("../views/search/Search-list.vue"),
-      },
-    ],
+    name: "Search",
+	children:[
+		{
+			path: "/",
+			name: "index",
+			component: () =>
+			  import("../views/search/Search-index.vue"),
+		},
+		{
+			path: "list",
+			name: "list",
+			component: () =>
+			  import("../views/search/Search-list.vue"),
+		}
+	],
+    component: () =>
+      import("../views/Search.vue"),
   },
 ];
 
 const router = new VueRouter({
+  mode: "history",
+  base: process.env.BASE_URL,
   routes,
 });
 

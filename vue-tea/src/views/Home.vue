@@ -2,18 +2,16 @@
   <div class="home">
     <div class="headers">
       <div class="headers-main">
-        <!-- 头部 -->
         <Header></Header>
-        <!-- tab -->
-        <van-tabs v-model="active" class="ly-tabs" @change="handleTabChange">
-          <div v-for="(item, index) in tabs" :key="index">
-            <van-tab :title="item.label"></van-tab>
-          </div>
-        </van-tabs>
+        <ly-tab
+          v-model="selectedId"
+          :items="items"
+          :options="options"
+          @change="changeTab"
+        >
+        </ly-tab>
       </div>
     </div>
-
-    <!-- section -->
     <section ref="wrapper">
       <div>
         <div v-for="(item, index) in newData" :key="index">
@@ -21,90 +19,105 @@
             v-if="item.type == 'swiperList'"
             :swiperList="item.data"
           ></Swiper>
-          <Icon v-if="item.type == 'iconsList'" :iconsList="item.data"></Icon>
+
+          <Icons v-if="item.type == 'iconsList'" :iconsList="item.data"></Icons>
+
           <Recommend
             v-if="item.type == 'recommendList'"
             :recommendList="item.data"
           ></Recommend>
+
+          <Ad v-if="item.type == 'adList'" :adList="item.data"></Ad>
+
           <Like v-if="item.type == 'likeList'" :likeList="item.data"></Like>
-          <Ad v-if="item.type == 'adList'" :AdList="item.data"></Ad>
         </div>
       </div>
     </section>
+    <Tabbar></Tabbar>
   </div>
 </template>
 
 <script>
+import http from "@/common/api/request.js";
 import Header from "@/components/home/Header.vue";
 import Swiper from "@/components/home/Swiper.vue";
-import Icon from "@/components/home/Icon.vue";
+import Icons from "@/components/home/Icons.vue";
 import Recommend from "@/components/home/Recommend.vue";
 import Like from "@/components/home/Like.vue";
 import Ad from "@/components/home/Ad.vue";
-// import LyTabs from "ly-tab";
-import { LyTabs, LyTabBar, LyTabItem } from "ly-tab";
+import Tabbar from "@/components/common/Tabbar.vue";
+//引入插件
 import BetterScroll from "better-scroll";
 
-import axios from "axios";
 export default {
   name: "Home",
+  data() {
+    return {
+      selectedId: 0,
+      items: [],
+      newData: [],
+      oBetterScroll: "",
+      tBetterScroll: "",
+      options: {
+        activeColor: "#b0352f",
+      },
+    };
+  },
   components: {
     Header,
     Swiper,
-    Icon,
+    Icons,
     Recommend,
     Like,
     Ad,
-
-    LyTabs,
-    LyTabBar,
-    LyTabItem,
-  },
-  data() {
-    return {
-      active: "0",
-      tabs: [], //tabs数据
-      newData: [],
-    };
+    Tabbar,
   },
   created() {
     this.getData();
   },
-  mounted() {},
   methods: {
     async getData() {
-      const res = await axios({
+      let res = await http.$axios({
         url: "/api/index_list/0/data/1",
       });
-      this.tabs = res.data.data.topBar; //tabs数据
-      this.newData = res.data.data.data;
 
+      this.items = Object.freeze(res.topBar);
+      this.newData = Object.freeze(res.data);
+
+      //当dom都加载完毕了再去执行
       this.$nextTick(() => {
-        new BetterScroll(this.$refs.wrapper, {
+        this.oBetterScroll = new BetterScroll(this.$refs.wrapper, {
           movable: true,
           zoom: true,
-          click: true,
         });
       });
     },
     async addData(index) {
-      let res = await axios({ url: `/api/index_list/${index}/data/1` });
-      if (res.data.data.constructor !== Array) {
-        this.newData = res.data.data.data;
+      let res = await http.$axios({
+        url: "/api/index_list/" + index + "/data/1",
+      });
+
+      if (res.constructor != Array) {
+        this.newData = res.data;
       } else {
-        this.newData = res.data.data;
+        this.newData = res;
       }
-      console.log(res);
+
+      this.$nextTick(() => {
+        this.tBetterScroll = new BetterScroll(this.$refs.wrapper, {
+          movable: true,
+          zoom: true,
+        });
+      });
     },
-    // 点击Tab
-    handleTabChange(index) {
+    changeTab(item, index) {
       this.addData(index);
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .home {
   display: flex;
   flex-direction: column;
@@ -114,7 +127,7 @@ export default {
 }
 .headers {
   width: 100%;
-  height: 2.28rem;
+  height: 2.88rem;
 }
 .headers-main {
   position: fixed;
@@ -125,15 +138,8 @@ section {
   flex: 1;
   overflow: hidden;
 }
-.ly-tabs {
-  width: 100%;
-  /* margin-top: 1.2rem; */
-  margin-top: 1.2rem;
-}
-
-.wrapper {
-  height: 100vh;
-  height: 14.6667rem;
-  overflow: hidden;
+::v-deep .ly-tabbar {
+  box-shadow: none;
+  border-bottom: none;
 }
 </style>

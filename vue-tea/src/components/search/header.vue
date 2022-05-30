@@ -1,12 +1,16 @@
 <template>
   <header>
-    <div class="search-return" @click="handelBack">
+    <div class="search-return" @click="goBack">
       <i class="iconfont icon-fanhui"></i>
     </div>
     <div class="search-main">
       <i class="iconfont icon-fangdajing"></i>
-      <form action="" onsubmit="return false">
-        <input type="search" placeholder="搜索您喜欢的产品..." />
+      <form action="" onsubmit="return false" @keyup.enter="goSearchList">
+        <input
+          type="search"
+          placeholder="搜索您喜欢的产品..."
+          v-model="searchVal"
+        />
       </form>
     </div>
     <div class="serach-btn" @click="goSearchList">搜索</div>
@@ -15,18 +19,44 @@
 
 <script>
 export default {
+  data() {
+    return {
+      searchVal: this.$route.query.key || "", //用户输入的
+      searchArr: [],
+    };
+  },
   methods: {
-    handelBack() {
+    goBack() {
       this.$router.back();
     },
     goSearchList() {
+      // 如果为空 什么都不要做
+      if (!this.searchVal) {
+        return;
+      }
+      // 如果本地存储没东西 就设置  有就获取
+      if (!localStorage.getItem("searchList")) {
+        localStorage.setItem("searchList", "[]");
+      } else {
+        this.searchArr = JSON.parse(localStorage.getItem("searchList"));
+      }
+
+      this.searchArr.unshift(this.searchVal); //增加数据
+      let newArr = new Set(this.searchArr); // arrray.from new set 数组去重
+      localStorage.setItem("searchList", JSON.stringify(Array.from(newArr)));
+
+      if (this.searchVal === this.$route.query.key) return; //路径如果没有变化 别跳
       this.$router.push({
-        path: "/search/list",
+        name: "list",
+        query: {
+          key: this.searchVal,
+        },
       });
     },
   },
 };
 </script>
+
 <style scoped>
 header {
   display: flex;
@@ -64,8 +94,6 @@ header {
 }
 .search-main form input {
   width: 100%;
-  font-size: 0.4267rem;
-  color: #666666;
 }
 .serach-btn {
   font-size: 0.426666rem;

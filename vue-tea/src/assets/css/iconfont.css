@@ -1,8 +1,8 @@
 @font-face {
-  font-family: "iconfont"; /* Project id 3424265 */
-  src: url('//at.alicdn.com/t/font_3424265_pvm4sldg3qo.woff2?t=1653536915345') format('woff2'),
-       url('//at.alicdn.com/t/font_3424265_pvm4sldg3qo.woff?t=1653536915345') format('woff'),
-       url('//at.alicdn.com/t/font_3424265_pvm4sldg3qo.ttf?t=1653536915345') format('truetype');
+  font-family: "iconfont"; /* Project id 2602516 */
+  src: url('../fonts/iconfont.woff2?t=1623484256169') format('woff2'),
+       url('../fonts/iconfont.woff?t=1623484256169') format('woff'),
+       url('../fonts/iconfont.ttf?t=1623484256169') format('truetype');
 }
 
 .iconfont {
@@ -13,18 +13,31 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-arrow_down_fat:before {
+  content: "\e62a";
+}
+
+.icon-arrow_up_fat:before {
+  content: "\e62b";
+}
+
+.icon-changyongicon-:before {
+  content: "\e618";
+}
+
+.icon-fanhui:before {
+  content: "\e60e";
+}
+
+.icon-shijian:before {
+  content: "\e613";
+}
+
 .icon-fangdajing:before {
   content: "\e617";
 }
 
-.icon-fanhui:before {
-  content: "\e624";
+.icon-kefu:before {
+  content: "\e697";
 }
 
-.icon--kefu:before {
-  content: "\e8ab";
-}
-
-.icon-Magnifier:before {
-  content: "\e62d";
-}

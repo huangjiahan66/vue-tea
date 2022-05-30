@@ -1,12 +1,14 @@
 <template>
   <header>
-    <h1><img src="../../assets/image/logo.png" alt="" /></h1>
-    <div class="search" @click="handleSearch">
-      <i class="iconfont icon-Magnifier"></i>
-      <span class="placeholder">搜你喜欢的</span>
+    <h1>
+      <img src="@/assets/images/食物茶叶.png" alt="" />
+    </h1>
+    <div class="search" @click="goSearch">
+      <i class="iconfont icon-fangdajing"></i>
+      <span>搜您喜欢的...</span>
     </div>
     <div class="kefu">
-      <i class="iconfont icon--kefu"></i>
+      <i class="iconfont icon-kefu"></i>
     </div>
   </header>
 </template>
@@ -14,7 +16,7 @@
 <script>
 export default {
   methods: {
-    handleSearch() {
+    goSearch() {
       this.$router.push("/search");
     },
   },
@@ -24,34 +26,34 @@ export default {
 <style scoped>
 header {
   display: flex;
-  align-items: center;
   justify-content: space-around;
-  position: fixed;
-  top: 0;
-  left: 0;
+  align-items: center;
   width: 100%;
-  height: 1.1733rem;
+  height: 1.6rem;
   background-color: #b0352f;
 }
-img {
-  width: 1.8667rem;
-  height: 1.6133rem;
+header h1 {
+  padding: 0 0.266666rem;
+  width: 1.2rem;
 }
-
+header h1 img {
+  width: 100%;
+  height: 100%;
+}
 .search {
   display: flex;
   align-items: center;
-  width: 6.56rem;
+  width: 5rem;
   height: 0.8rem;
-  background: #ffffff;
-  border-radius: 0.1333rem;
+  background-color: #ffffff;
+  border-radius: 12px;
 }
 .search i {
-  padding: 0 0.4rem;
-  font-size: 0.48rem;
+  padding: 0 0.16rem;
+  color: #ccc;
 }
-.search .placeholder {
-  font-size: 0.3733rem;
+.search span {
+  font-size: 0.373333rem;
   color: #ccc;
 }
 .kefu i {

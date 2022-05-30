@@ -1,34 +1,68 @@
 <template>
-  <div class="search">
+  <div class="search-index">
     <Header></Header>
     <section>
-      <div class="search-history">
-        <div class="history">
-          <h2>历史搜索</h2>
-          <span class="history-clear">清空历史 记录</span>
-        </div>
+      <div class="search-history" v-if="searchArr.length">
+        <h2>
+          <i class="iconfont icon-shijian"></i>
+          <span>历史搜索</span>
+          <span @click="handleDeleteStorage">清空历史记录</span>
+        </h2>
         <ul>
-          <li>茶叶</li>
-          <li>茶叶</li>
-          <li>茶叶</li>
-          <li>茶叶</li>
-          <li>茶叶</li>
+          <li
+            v-for="(item, index) in searchArr"
+            :key="index"
+            @click="goSearchList(item)"
+          >
+            {{ item }}
+          </li>
         </ul>
       </div>
+
+      <div v-else>没有搜索记录哦~~</div>
     </section>
     <Tabbar></Tabbar>
   </div>
 </template>
 
 <script>
-import Header from "@/components/search/header";
-import Like from "@/components/home/Like";
-import Tabbar from "@/common/Tabbar/Tabbar.vue";
+import Header from "@/components/search/Header.vue";
+import Tabbar from "@/components/common/Tabbar.vue";
+import { MessageBox } from "mint-ui";
 export default {
   components: {
-    Tabbar,
     Header,
-    Like,
+    Tabbar,
+  },
+  data() {
+    return {
+      searchArr: [],
+    };
+  },
+  created() {
+    this.searchArr = JSON.parse(localStorage.getItem("searchList")) || [];
+  },
+  methods: {
+    handleDeleteStorage() {
+      MessageBox({
+        title: "提示",
+        message: "确定要删除历史记录吗",
+        showCancelButton: true,
+      }).then((res) => {
+        if (res == "confirm") {
+          localStorage.removeItem("searchList");
+          this.searchArr = [];
+        }
+      });
+    },
+    goSearchList(item) {
+      this.$router.push({
+        name: "list",
+        query: {
+          key: item,
+        },
+      });
+    },
   },
 };
 </script>
@@ -45,16 +79,6 @@ section {
   flex: 1;
   background-color: #f5f5f5;
   overflow: hidden;
-  height: 100vh;
-}
-.history {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.history-clear {
-  font-size: 0.4267rem;
-  margin-right: 1.3333rem;
 }
 .search-history h2 {
   position: relative;
