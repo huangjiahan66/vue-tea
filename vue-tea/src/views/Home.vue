@@ -89,6 +89,7 @@ export default {
         this.oBetterScroll = new BetterScroll(this.$refs.wrapper, {
           movable: true,
           zoom: true,
+          click: true,
         });
       });
     },

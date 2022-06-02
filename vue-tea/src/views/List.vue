@@ -13,26 +13,33 @@
       </div>
     </header>
     <section>
-      <div class="list-l">
+      <div class="list-l" ref="left">
         <ul class="l-item">
-          <li v-for="(item, index) in leftData" :key="index" class="active">
+          <li
+            v-for="(item, index) in leftData"
+            :key="index"
+            :class="{ active: index == currentIndex }"
+            @click="goScroll(index)"
+          >
             {{ item.name }}
           </li>
         </ul>
       </div>
 
-      <div class="list-r">
-        <ul v-for="(item, index) in rightData" :key="index" class="shop-list">
-          <li v-for="(k, i) in item" :key="i">
-            <h2>{{ k.name }}</h2>
-            <ul class="r-content">
-              <li v-for="(j, idx) in k.list" :key="idx">
-                <img :src="j.imgUrl" alt="" />
-                <span>{{ j.name }}</span>
-              </li>
-            </ul>
-          </li>
-        </ul>
+      <div class="list-r" ref="right">
+        <div>
+          <ul v-for="(item, index) in rightData" :key="index" class="shop-list">
+            <li v-for="(k, i) in item" :key="i">
+              <h2>{{ k.name }}</h2>
+              <ul class="r-content">
+                <li v-for="(j, idx) in k.list" :key="idx">
+                  <img :src="j.imgUrl" alt="" />
+                  <span>{{ j.name }}</span>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
       </div>
     </section>
     <Tabbar></Tabbar>
@@ -40,6 +47,7 @@
 </template>
 
 <script>
+import BetterScroll from "better-scroll";
 import Tabbar from "@/components/common/Tabbar.vue";
 import http from "@/common/api/request.js";
 export default {
@@ -48,7 +56,17 @@ export default {
     return {
       leftData: [], //左侧数据
       rightData: [], //右侧数据
+      rightBScroll: "", //右侧滑动BScroll
+      allHeight: [], //承载右侧每一块的高度值
+      scrollY: "", //右侧滚动距离
     };
+  },
+  computed: {
+    currentIndex() {
+      return this.allHeight.findIndex((item, index) => {
+        return this.scrollY >= item && this.scrollY < this.allHeight[index + 1];
+      });
+    },
   },
   components: {
     Tabbar,
@@ -70,6 +88,37 @@ export default {
     });
     this.leftData = leftArr;
     this.rightData = rightArr;
+
+    this.$nextTick(() => {
+      //左侧滑动
+      new BetterScroll(this.$refs.left, {
+        click: true,
+      });
+      //右侧滑动
+      this.rightBScroll = new BetterScroll(this.$refs.right, {
+        click: true,
+        probeType: 3,
+      });
+      //统计右侧所有板块高度值，并且放入数组中
+      let height = 0;
+      this.allHeight.push(height);
+      //获取右侧每一块高度
+      let uls = this.$refs.right.getElementsByClassName("shop-list");
+      //把dom对象转换成功真正的数组
+      Array.from(uls).forEach((v) => {
+        height += v.clientHeight;
+        this.allHeight.push(height);
+      });
+      //得到右侧滚动的值
+      this.rightBScroll.on("scroll", (pos) => {
+        this.scrollY = Math.abs(pos.y);
+      });
+    });
+  },
+  methods: {
+    goScroll(index) {
+      this.rightBScroll.scrollTo(0, -this.allHeight[index], 300);
+    },
   },
 };
 </script>

@@ -7,6 +7,20 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
+//查询商品id的数据
+router.get('/api/goods/id',function(req,res,next){
+	let id = req.query.id;
+	connection.query('select * from goods_list where id='+id+'',function(error,results){
+		if( error ) throw error;
+		res.json({
+			code:0,
+			data:results[0]
+		})
+	})
+})
+
+
+
 //分类的接口
 router.get("/api/goods/list", function (req, res, next) {
   res.send({
@@ -492,46 +506,29 @@ router.get("/api/index_list/0/data/1", function (req, res, next) {
           data: [
             {
               id: 1,
-              imgUrl: "./images/like.jpeg",
-              name: "建盏茶具套装 红色芝麻毫 12件套",
-              price: 299,
+              imgUrl: "./images/goods1.jpg",
+              name: "武夷山高级大红袍2号",
+              price: 238,
             },
             {
               id: 2,
-              imgUrl: "./images/like.jpeg",
-              name: "建盏茶具套装 红色芝麻毫 12件套",
-              price: 299,
+              imgUrl: "./images/goods2.jpg",
+              name: "武夷山灰芽花香金骏眉3号",
+              price: 26,
             },
             {
               id: 3,
-              imgUrl: "./images/like.jpeg",
-              name: "建盏茶具套装 红色芝麻毫 12件套",
-              price: 299,
+              imgUrl: "./images/goods3.jpg",
+              name: "绿茶 远致龙井3号",
+              price: 118,
             },
             {
-              id: 3,
-              imgUrl: "./images/like.jpeg",
-              name: "建盏茶具套装 红色芝麻毫 12件套",
-              price: 299,
+              id: 4,
+              imgUrl: "./images/goods4.jpg",
+              name: "明前春茶  绿茶 龙井",
+              price: 98,
             },
-            {
-              id: 3,
-              imgUrl: "./images/like.jpeg",
-              name: "建盏茶具套装 红色芝麻毫 12件套",
-              price: 299,
-            },
-            {
-              id: 3,
-              imgUrl: "./images/like3.jpeg",
-              name: "建盏茶具套装 红色芝麻毫 12件套",
-              price: 299,
-            },
-            {
-              id: 3,
-              imgUrl: "./images/like2.jpeg",
-              name: "建盏茶具套装 红色芝麻毫 12件套",
-              price: 299,
-            },
+        
           ],
         },
       ],
