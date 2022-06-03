@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     goDetail(id) {
-      console.log(id);
+      // console.log(id);
       this.$router.push({
         path: "/detail",
         query: { id },

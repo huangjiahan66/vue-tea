@@ -3,7 +3,7 @@
     <header>
       <div class="header-returns" v-show="isShow">
         <div>
-          <i class="iconfont icon-fanhui"></i>
+          <i class="iconfont icon-fanhui" @click="goBack"></i>
         </div>
         <div>
           <i class="iconfont icon-kefu"></i>
@@ -107,9 +107,17 @@ export default {
     swiperSlide,
   },
   created() {
+    this.id = this.$route.query.id;
     this.handlequeryIdDetail();
   },
-
+  // 每次进入都执行
+  activated() {
+    console.log(this.id, this.$route.query.id);
+    if (this.$route.query.id !== this.id) {
+      this.id = this.$route.query.id;
+      this.handlequeryIdDetail();
+    }
+  },
   mounted() {
     this.BetterScroll = new BetterScroll(this.$refs.wrapper, {
       probeType: 3,
@@ -144,6 +152,9 @@ export default {
         },
       });
       this.goods = res;
+    },
+    goBack() {
+      this.$router.back();
     },
   },
 };
