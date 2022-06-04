@@ -10,18 +10,13 @@
           pattern="[0-9]*"
         />
       </div>
-      <div class="login-code">
-        <input
-          type="text"
-          placeholder="请输入短信验证码"
-          pattern="[0-9]*"
-          v-model="userCode"
-        />
-        <button :disabled="disabled" @click="sendCode">{{ codeMsg }}</button>
+      <div class="login-tel">
+        <input type="text" v-model="userPwd" placeholder="请输入密码" />
       </div>
       <div class="login-btn" @click="login">登 录</div>
       <div class="tab">
-        <span @click="goUserLogin">密码登录</span>
+        <span @click="goLogin">短信登录</span>
+        <span>找回密码</span>
         <span>快速注册</span>
       </div>
     </section>
@@ -37,9 +32,8 @@ import http from "@/common/api/request.js";
 export default {
   data() {
     return {
-      disabled: false,
-      userTel: "",
-      userCode: "",
+      userTel: "", //用户输入的手机号
+      userPwd: "", //用户输入的密码
       //验证规则
       rules: {
         //手机号验证
@@ -47,10 +41,12 @@ export default {
           rule: /^1[23456789]\d{9}$/,
           msg: "手机号不能为空，并且是11位数字",
         },
+        //密码验证
+        userPwd: {
+          rule: /^\w{6,12}$/,
+          msg: "密码不能为空，并且要求6,12位",
+        },
       },
-      codeNum: 6,
-      codeMsg: "获取短信验证码",
-      code: "",
     };
   },
   components: {
@@ -58,42 +54,33 @@ export default {
     Tabbar,
   },
   methods: {
-    //点击获取短信验证码按钮
-    sendCode() {
-      //验证
-      if (!this.validate("userTel")) return;
+    //点击登录按钮
+    login() {
+      //前端验证
+      if (!this.validate("userTel")) return; // 如果不对 提示信息
 
-      //请求短信验证码接口
+      //发送请求，后端验证
       http
         .$axios({
-          url: "/api/code",
+          url: "/api/login",
           method: "POST",
           data: {
-            phone: this.userTel,
+            userTel: this.userTel,
+            userPwd: this.userPwd,
           },
         })
         .then((res) => {
-          if (res.success) {
-            this.code = res.data;
-          }
+          console.log(res);
+          //提示信息
+          Toast(res.msg);
+          //登录失败
+          if (!res.succcess) return;
+
+          //登录成功 ==》跳转页面，存储用户信息
         });
-      //禁用按钮
-      this.disabled = true;
-      //倒计时
-      let timer = setInterval(() => {
-        --this.codeNum;
-        this.codeMsg = `重新发送 ${this.codeNum}`;
-      }, 1000);
-      //判断什么时候停止定时器
-      setTimeout(() => {
-        clearInterval(timer);
-        this.codeNum = 6;
-        this.disabled = false;
-        this.codeMsg = "获取短信验证码";
-      }, 6000);
     },
-    goUserLogin() {
-      this.$router.push("/userLogin");
+    goLogin() {
+      this.$router.push("/login");
     },
     //验证信息提示
     validate(key) {
@@ -105,25 +92,6 @@ export default {
         return false;
       }
       return bool;
-    },
-    //点击登录  如果验证码输入的是对 发请求 前端把电话号码字段穿过去
-    login() {
-      if (this.code == this.userCode) {
-        //证明用户输入的短信验证码是正确的
-        //发送请求
-        http
-          .$axios({
-            url: "/api/addUser",
-            method: "POST",
-            data: {
-              phone: this.userTel,
-            },
-          })
-          .then((res) => {
-            if (!res.success) return;
-            console.log(res);
-          });
-      }
     },
   },
 };
